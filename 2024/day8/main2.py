@@ -4,6 +4,10 @@ dictAntinodes = {}
 
 def addAntinode(lines, x, y):
     antenna = lines[y][x]
+    if dictAntinodes.get((x, y)) is None:
+        dictAntinodes[x, y] = [antenna]
+    else:
+        dictAntinodes[x, y].append(antenna)
     for i in range(len(lines)):
         for j in range(len(lines[i])):
             if lines[i][j] == antenna:
@@ -11,7 +15,7 @@ def addAntinode(lines, x, y):
                 if vector[0] == 0 and vector[1] == 0:
                     continue
                 new_x, new_y = j + vector[0], i + vector[1]
-                if 0 <= new_y < len(lines) and 0 <= new_x < len(lines[i]):
+                while 0 <= new_y < len(lines) and 0 <= new_x < len(lines[i]):
                         oldAntenna = dictAntinodes.get((new_x, new_y))
                         
                         if oldAntenna is None:
@@ -19,6 +23,19 @@ def addAntinode(lines, x, y):
                         elif antenna not in oldAntenna:
                             oldAntenna.append(antenna)
                             dictAntinodes[new_x, new_y] = oldAntenna
+                        new_x += vector[0]
+                        new_y += vector[1]
+                new_x, new_y = j + vector[0], i + vector[1]
+                while 0 <= new_y < len(lines) and 0 <= new_x < len(lines[i]):
+                        oldAntenna = dictAntinodes.get((new_x, new_y))
+                        
+                        if oldAntenna is None:
+                            dictAntinodes[new_x, new_y] = [antenna]
+                        elif antenna not in oldAntenna:
+                            oldAntenna.append(antenna)
+                            dictAntinodes[new_x, new_y] = oldAntenna
+                        new_x -= vector[0]
+                        new_y -= vector[1]
     return lines
 
 
